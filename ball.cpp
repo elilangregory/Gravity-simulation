@@ -34,7 +34,7 @@ void Ball::draw(AnimationWindow& window) {
     window.draw_circle(position, radius, color);
     }
 
-    TDT4102::Point Ball::get_position() const {
+TDT4102::Point Ball::get_position() const {
     return position;
 }
 
@@ -62,12 +62,12 @@ void Ball::apply_gravity_from(const Ball& other, float G) {
     float distanceSquared = dx * dx + dy * dy + 0.001f; // unngå /0
 
     float force = G * (mass * other.mass) / distanceSquared; //newtons lov om universiell gravitasjon.
-    float acceleration = force / mass;
+    float acceleration = force / mass; // F = ma
 
     float distance = std::sqrt(distanceSquared);
-    float ax = acceleration * dx / distance;
+    float ax = acceleration * dx / distance; // decompose acceleration in ax and ay retning. 
     float ay = acceleration * dy / distance;
 
-    xVelocity += ax;
+    xVelocity += ax; // v = v0 + a delta_t where delta_t = 1
     yVelocity += ay;
 }

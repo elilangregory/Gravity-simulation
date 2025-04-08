@@ -12,7 +12,8 @@ int main() {
     std::cout << "2: Bouncing ball with 2 balls\n";
     std::cout << "3: Bouncing balls with collision\n";
     std::cout << "4: Gravity test\n";
-    std::cout << "5\n";
+    std::cout << "5 3d build\n";
+    std::cout << "6 3d build and orbit\n";
     std::cout << "Write a number and press Enter: ";
     std::cin >> choice;
 
@@ -32,8 +33,7 @@ int main() {
              ball.draw(window);
              window.next_frame();}
             }
-        }
-            break;
+        break;}
 
         case 2:{
             // same as the other one but with two balls
@@ -54,9 +54,7 @@ int main() {
             ball2.draw(window);
             window.next_frame(); }
             } 
-        }   
-        break;   
-
+        break;}      
 
         case 3: {
             constexpr int width = 800;
@@ -86,8 +84,7 @@ int main() {
             
             window.next_frame();
             }
-        }
-        break; 
+        break;}
 
     case 4: {
         constexpr int width = 800;
@@ -116,10 +113,8 @@ int main() {
 
         window.next_frame();
         }
+        break;
     }
-    break;
-
-    
     case 5: {
         
         constexpr int width = 800;
@@ -134,8 +129,44 @@ int main() {
             window.next_frame();
 
         }
+    break;}
+
+    case 6: {
+        constexpr int width = 800;
+        constexpr int height = 600;
+    
+        TDT4102::AnimationWindow window{100, 100, width, height, "3D Orbiting Sphere"};
+        Mesh sphere = generate_sphere_mesh(20, 20, 1.0f);
+    
+        float theta = 0.0f;
+        float orbitRadius = 3.0f;
+        Vec3 center = {0.0f, 0.0f, 6.0f}; // 3D-senter som er synlig foran kamera
+    
+        while (!window.should_close()) {
+            window.draw_rectangle({0, 0}, width, height, TDT4102::Color::black);
+    
+            // Beregn ny posisjon på banen
+            Vec3 orbitPos = {
+                center.x + orbitRadius * cos(theta),
+                center.y,
+                center.z + orbitRadius * sin(theta)
+            };
+    
+            // Kopiér og flytt kula til ny bane-posisjon
+            Mesh movedSphere = sphere;
+            for (auto& v : movedSphere.vertices) {
+                v = v + orbitPos;
+            }
+    
+            draw_mesh_filled(movedSphere, window);
+            theta += 0.02f;
+    
+            window.next_frame();
+        }
+        break;
     }
-    break;
+
+    
 
         default:
             std::cout << "Ugyldig valg.\n";
