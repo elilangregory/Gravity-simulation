@@ -11,3 +11,5 @@ Make the ball look 3D using vertices?
 Add the physical behavoir of a planet and the sun. 
 
 Maybe add space curvature???
+
+### F = G * (m1 * m2) / r^2

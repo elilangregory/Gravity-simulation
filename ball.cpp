@@ -2,21 +2,33 @@
 
 using namespace TDT4102;
     
-Ball::Ball(Point startPos, int rad, int xVel, int yVel, int winW, int winH, TDT4102::Color col )
+Ball::Ball(Point startPos, int rad, float xVel, float yVel, int winW, int winH, Color col, float mass)
     : position(startPos), radius(rad), xVelocity(xVel), yVelocity(yVel),
-          windowWidth(winW), windowHeight(winH), color(col) {}
+          windowWidth(winW), windowHeight(winH), color(col), mass(mass) {}
     
 void Ball::update() {
     position.x += xVelocity;
     position.y += yVelocity;
-    
-    if (position.x - radius <= 0 || position.x + radius >= windowWidth) {
+    // Left wall
+    if (position.x - radius <= 0) {
         xVelocity = -xVelocity;
-        }
-    if (position.y - radius <= 0 || position.y + radius >= windowHeight) {
-        yVelocity = -yVelocity;
-        }
+        position.x = radius; 
     }
+    //Right wall
+    else if (position.x + radius > windowWidth) {
+        xVelocity = -xVelocity;
+        position.x = windowWidth - radius; 
+    }
+    //Top 
+    if (position.y - radius < 0) {
+        yVelocity = -yVelocity;
+        position.y = radius; 
+    }
+    //bottom
+    else if (position.y + radius > windowHeight) {
+        yVelocity = -yVelocity;
+        position.y = windowHeight - 2*radius; 
+    }}
     
 void Ball::draw(AnimationWindow& window) {
     window.draw_circle(position, radius, color);
@@ -39,4 +51,23 @@ bool Ball::check_collision_with(const Ball& other) const {
     int combinedRadius = this->radius + other.radius;
 
     return distance < combinedRadius;
+}
+
+void Ball::apply_gravity_from(const Ball& other, float G) {
+    if (this == &other) return;
+
+    Point otherPos = other.get_position();
+    float dx = otherPos.x - position.x;
+    float dy = otherPos.y - position.y;
+    float distanceSquared = dx * dx + dy * dy + 0.001f; // unngå /0
+
+    float force = G * (mass * other.mass) / distanceSquared; //newtons lov om universiell gravitasjon.
+    float acceleration = force / mass;
+
+    float distance = std::sqrt(distanceSquared);
+    float ax = acceleration * dx / distance;
+    float ay = acceleration * dy / distance;
+
+    xVelocity += ax;
+    yVelocity += ay;
 }
