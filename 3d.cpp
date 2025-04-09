@@ -2,6 +2,7 @@
 #include <cmath>
 
 
+
 Vec3 Vec3::operator+(const Vec3& other) const {
     return {x + other.x, y + other.y, z + other.z};
 }
@@ -40,24 +41,34 @@ TDT4102::Point project(const Vec3& v, float focalLength, int cx, int cy) { // Pr
 }
 
 void draw_mesh_filled(const Mesh& mesh, TDT4102::AnimationWindow& win, TDT4102::Color baseColor) {
-    Vec3 lightDir = normalize({0, 0, -1}); // Lys kommer rett fra kameraet
+    Vec3 lightDir = normalize({0, 0, -1}); // Light from camera
 
     for (const auto& tri : mesh.triangles) {
         Vec3 a = mesh.vertices[tri[0]];
         Vec3 b = mesh.vertices[tri[1]];
         Vec3 c = mesh.vertices[tri[2]];
 
-        // Normal fra kryssprodukt
         Vec3 u = b - a;
         Vec3 v = c - a;
         Vec3 normal = normalize(cross(u, v));
 
-        // Lysstyrke = dot(normal, lysretning)
         float brightness = std::max(0.0f, dot(normal, lightDir));
-        int shade = static_cast<int>(brightness * 255);  // Fra 0 → 255
 
-        // Lys blåfarge avhengig av lysstyrke
-        TDT4102::Color shadedColor{0, 0, static_cast<unsigned char>(shade)};
+        int r = static_cast<int>((baseColor.redChannel + 10) * brightness);
+        int g = static_cast<int>((baseColor.greenChannel + 10) * brightness);
+        int bl = static_cast<int>((baseColor.blueChannel + 10) * brightness);
+
+        // Clamp to 255 to avoid overflow
+        r = std::min(255, r);
+        g = std::min(255, g);
+        bl = std::min(255, bl);
+
+        // Construct shaded color
+        TDT4102::Color shadedColor{
+            static_cast<unsigned char>(r),
+            static_cast<unsigned char>(g),
+            static_cast<unsigned char>(bl),
+        };
 
         TDT4102::Point p1 = project(a);
         TDT4102::Point p2 = project(b);
@@ -69,25 +80,26 @@ void draw_mesh_filled(const Mesh& mesh, TDT4102::AnimationWindow& win, TDT4102::
 Mesh generate_sphere_mesh(int latitudeSteps, int longitudeSteps, float radius) {
     Mesh mesh;
 
-    // Generer punkter
+    // Generate points 
     for (int i = 0; i <= latitudeSteps; ++i) {
-        float theta = M_PI * i / latitudeSteps; // 0 → pi
+        float theta = M_PI * i / latitudeSteps; // 0 to pi, from northpole to southpole
         for (int j = 0; j <= longitudeSteps; ++j) {
-            float phi = 2 * M_PI * j / longitudeSteps; // 0 → 2pi
+            float phi = 2 * M_PI * j / longitudeSteps; // 0 to 2pi, around the sphere
 
+            // Conversion to 3D coordinates
             float x = radius * sin(theta) * cos(phi);
             float y = radius * sin(theta) * sin(phi);
             float z = radius * cos(theta);
 
-            mesh.vertices.push_back({x, y, z+ 3.0f});
+            mesh.vertices.push_back({x, y, z+ 3.0f}); //move the sphere just in case it is on the projection and not divisible by zero
         }
     }
 
-    // Generer triangler mellom punktene
+    // Make triangle between points
     for (int i = 0; i < latitudeSteps; ++i) {
         for (int j = 0; j < longitudeSteps; ++j) {
-            int current = i * (longitudeSteps + 1) + j;
-            int next = current + longitudeSteps + 1;
+            int current = i * (longitudeSteps + 1) + j; // point in "latitude row"
+            int next = current + longitudeSteps + 1; // similar point on the next 
 
             mesh.triangles.push_back({current, next, current + 1});
             mesh.triangles.push_back({current + 1, next, next + 1});

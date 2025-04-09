@@ -68,6 +68,6 @@ void Ball::apply_gravity_from(const Ball& other, float G) {
     float ax = acceleration * dx / distance; // decompose acceleration in ax and ay retning. 
     float ay = acceleration * dy / distance;
 
-    xVelocity += ax; // v = v0 + a delta_t where delta_t = 1
+    xVelocity += ax; // v = v0 + a * delta_t where delta_t = 1
     yVelocity += ay;
 }
