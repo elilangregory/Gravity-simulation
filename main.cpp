@@ -246,7 +246,19 @@ int main() {
     }
 
         case 8: {
+            std::cout << "Do you want to see the normal version or the slingshot version?\n";
+            std::cout << "For normal, press 1 and enter, for slingshot press 2 and enter\n";
+
+            int sling_choice;
+            std::cin >> sling_choice;
+            float sling;
+            
+            if (sling_choice == 2) {sling = 0.05f;}
+            else {sling = 0.1f;}
+    
+
         try {
+        
             constexpr int width = 800;
             constexpr int height = 600;
             TDT4102::AnimationWindow window{100, 100, width, height, "Sun + orbiting planet + moon"};
@@ -260,7 +272,7 @@ int main() {
     
             Planet planet(
                 Vec3{10.0f, 0.0f, 6.0f},
-                Vec3{0.0f, 0.1f, 0.0f}, // 0.1 v.y for ideal orbit, 0.05 for a funny slingshot
+                Vec3{0.0f, sling, 0.0f}, // 0.1 v.y for ideal orbit, 0.05 for a funny slingshot
                 1.0f,
                 0.5f
             );
