@@ -43,7 +43,6 @@ public:
     std::string type() const override { return "Sun"; }
 };
 
-
 class Moon : public CelestialBody {
 public:
     using CelestialBody::CelestialBody;
