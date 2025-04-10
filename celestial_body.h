@@ -1,6 +1,5 @@
 #pragma once
 #include "3d.h"
-#include <string>
 #include <iostream>
 #include <stdexcept>
 
@@ -12,7 +11,7 @@ public:
     float mass;
     Mesh mesh;
 
-    CelestialBody(Vec3 pos, Vec3 vel, float m, float radius);
+    CelestialBody(Vec3 pos, Vec3 vel, float mass, float radius);
 
     // update motion (can be overridden by subclasses)
     virtual void update_position();
@@ -23,7 +22,7 @@ public:
     // for try catch and identification
     virtual std::string type() const = 0;
 
-    virtual ~CelestialBody() = default; // virtual destructor just in case
+    virtual ~CelestialBody() = default; // virtual destructor just for safety, just in case
 };
 
 // planet has same logic as base, but can throw if too far away
@@ -35,7 +34,7 @@ public:
     std::string type() const override { return "Planet"; }
 };
 
-// sun stays fixed at the center
+// sun will stay static at the center
 class Sun : public CelestialBody {
 public:
     using CelestialBody::CelestialBody;
@@ -44,7 +43,7 @@ public:
     std::string type() const override { return "Sun"; }
 };
 
-// moon has slower motion update 
+
 class Moon : public CelestialBody {
 public:
     using CelestialBody::CelestialBody;

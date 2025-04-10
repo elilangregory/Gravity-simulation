@@ -4,7 +4,7 @@
 #include <cmath>  
 #include "AnimationWindow.h"
 
-// basic 3D vector
+// basic 3D vector with x y z coordinates, and operator overloading
 struct Vec3 {
     float x, y, z;
 
@@ -25,10 +25,10 @@ struct Mesh {
 };
 
 // projects 3D point to 2D screen space
-TDT4102::Point project(const Vec3& v, float focalLength = 300.0f, int cx = 400, int cy = 300);
+TDT4102::Point project(const Vec3& v, float focalLength = 250.0f, int cx = 400, int cy = 300);
 
 // draw filled triangle mesh w/ shading
-void draw_mesh_filled(const Mesh& mesh, TDT4102::AnimationWindow& win, TDT4102::Color baseColor = TDT4102::Color::blue);
+void draw_mesh_filled(const Mesh& mesh, TDT4102::AnimationWindow& win, TDT4102::Color baseColor);
 
 // makes sphere using mesh 
 Mesh generate_sphere_mesh(int latitudeSteps, int longitudeSteps, float radius);

@@ -23,6 +23,4 @@ class Ball{
         void reverse_velocity();
         bool check_collision_with(const Ball& other) const;
         void apply_gravity_from(const Ball& other, float G = 1.0f);
-
-
 };

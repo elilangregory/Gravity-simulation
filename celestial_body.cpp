@@ -4,8 +4,8 @@
 #include <iostream>
 
 // constructor generates the 3D mesh sphere based on radius
-CelestialBody::CelestialBody(Vec3 pos, Vec3 vel, float m, float radius)
-    : position(pos), velocity(vel), mass(m) {
+CelestialBody::CelestialBody(Vec3 pos, Vec3 vel, float mass, float radius)
+    : position(pos), velocity(vel), mass(mass) {
     mesh = generate_sphere_mesh(20, 20, radius);
 }
 
@@ -24,18 +24,18 @@ void CelestialBody::apply_gravity_from(const CelestialBody& other) {
             throw std::runtime_error("Division by zero in gravity calculation");
         }
 
-        Vec3 forceDir = normalize(direction);
+        Vec3 forceDir = normalize(direction); 
         float G = 0.01f; // scaled gravitational constant 
-        Vec3 acceleration = forceDir * (G * other.mass / distanceSquared);
+        Vec3 acceleration = forceDir * (G * other.mass / distanceSquared);  //newtons universal law of gravity adapted for simulation
 
-        velocity = velocity + acceleration;
+        velocity = velocity + acceleration; // v = v0 + a*delta_t, where delta_t is 1 per frame (for simplicity)
 
     } catch (const std::exception& e) {
         std::cerr << "Gravity error in " << type() << ": " << e.what() << std::endl;
     }
 }
 
-// Planet throws exception if too far away (visual debug only)
+// Planet throws exception if too far away 
 void Planet::update_position() {
     position = position + velocity;
 

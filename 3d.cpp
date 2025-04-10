@@ -43,36 +43,41 @@ TDT4102::Point project(const Vec3& v, float focalLength, int cx, int cy) { // Pr
 void draw_mesh_filled(const Mesh& mesh, TDT4102::AnimationWindow& win, TDT4102::Color baseColor) {
     Vec3 lightDir = normalize({0, 0, -1}); // Light from camera
 
+    // vector made by the triangle coordinates
     for (const auto& tri : mesh.triangles) {
         Vec3 a = mesh.vertices[tri[0]];
         Vec3 b = mesh.vertices[tri[1]];
         Vec3 c = mesh.vertices[tri[2]];
 
+        //finding the ortogonal vector on the plane span by the triangle, and then normalize it.
         Vec3 u = b - a;
         Vec3 v = c - a;
         Vec3 normal = normalize(cross(u, v));
 
-        float brightness = std::max(0.0f, dot(normal, lightDir));
+        // Taking the dot product between two normalized vectors gives the cosine of the angle between them.
+        // We use this to compute brightness based on how directly a surface faces the light.
+        float brightness = std::max(0.0f, dot(normal, lightDir)); 
 
         int r = static_cast<int>((baseColor.redChannel + 10) * brightness);
         int g = static_cast<int>((baseColor.greenChannel + 10) * brightness);
-        int bl = static_cast<int>((baseColor.blueChannel + 10) * brightness);
+        int bCol = static_cast<int>((baseColor.blueChannel + 10) * brightness);
 
-        // Clamp to 255 to avoid overflow
-        r = std::min(255, r);
-        g = std::min(255, g);
-        bl = std::min(255, bl);
+        if (r > 255) r = 255;
+        if (g > 255) g = 255;
+        if (bCol > 255) bCol = 255;
+
 
         // Construct shaded color
         TDT4102::Color shadedColor{
             static_cast<unsigned char>(r),
             static_cast<unsigned char>(g),
-            static_cast<unsigned char>(bl),
+            static_cast<unsigned char>(bCol),
         };
 
         TDT4102::Point p1 = project(a);
         TDT4102::Point p2 = project(b);
         TDT4102::Point p3 = project(c);
+        // draw each triangle with the calculated shade 
         win.draw_triangle(p1, p2, p3, shadedColor);
     }
 }
@@ -80,7 +85,7 @@ void draw_mesh_filled(const Mesh& mesh, TDT4102::AnimationWindow& win, TDT4102::
 Mesh generate_sphere_mesh(int latitudeSteps, int longitudeSteps, float radius) {
     Mesh mesh;
 
-    // Generate points 
+    // Generate points and using M_PI for precise pi value from cmath lib
     for (int i = 0; i <= latitudeSteps; ++i) {
         float theta = M_PI * i / latitudeSteps; // 0 to pi, from northpole to southpole
         for (int j = 0; j <= longitudeSteps; ++j) {
