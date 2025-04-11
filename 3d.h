@@ -4,7 +4,7 @@
 #include <cmath>  
 #include "AnimationWindow.h"
 
-// basic 3D vector with x y z coordinates, and operator overloading
+// 3D vector with x y z coordinates, and operator overloading
 struct Vec3 {
     float x, y, z;
 

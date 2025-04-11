@@ -39,7 +39,7 @@ class Sun : public CelestialBody {
 public:
     using CelestialBody::CelestialBody;
 
-    void update_position() override {} // sun does not move
+    void update_position() override {} 
     std::string type() const override { return "Sun"; }
 };
 

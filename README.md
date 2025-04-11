@@ -1,34 +1,47 @@
-# 🌌 TDT4102 Gravitational Simulation – Final Project
+# TDT4102 Gravity Simulation – Final Project
 
-Dette prosjektet simulerer et enkelt solsystem med en sol, en planet og en måne i bane. Programmet bruker en kombinasjon av 2D- og 3D-grafikk gjennom NTNU sitt AnimationWindow-bibliotek. Simulasjonen er fysikkbasert og benytter Newtons gravitasjonslov til å styre interaksjonen mellom objektene.
+This project simulates a simple solar system with a sun, a planet, and a moon in orbit. The program uses a combination of 2D and 3D graphics via the AnimationWindow library. The simulation is physics-based and applies Newton’s law of universal gravitation to replicate the interaction between the objects.
 
-## 🔧 Struktur og viktige filer
+Disclaimer: Although Newton’s law is implemented and gravity between the Earth and the Sun is simulated, real-world values for mass, radius, and distance have not been used. Instead, values were scaled to produce similar behavior visually. Due to these adjustments, the moon’s gravitational behavior did not behave as desired, and it was therefore hardcoded to follow a simple orbit instead.
 
-Prosjektet består av tre hovedkomponenter implementert i hver sin headerfil:
+⸻
+
+## Structure and Key Files
+
+The project consists of three main components, each implemented in its own header file:
 
 ### ball.h
 
-Denne klassen representerer en 2D-ball brukt i de enklere testene (case 1–4). Den implementerer metoder som update() for å oppdatere posisjon med fart, draw() for å tegne ballen, og apply_gravity_from() for å simulere gravitasjon fra en annen ball. Den brukes hovedsakelig for å eksperimentere med bevegelse og kollisjoner.
+This class represents a 2D ball used in early experiments (case 1–4). It contains methods like update() to update position based on velocity, draw() to draw the ball, and apply_gravity_from() to simulate gravitational attraction between balls. These tests formed the foundation of the project, where I experimented with Newton’s laws, collisions, and basic gravitational dynamics.
 
 ### 3d.h
 
-Her defineres strukturer og funksjoner for 3D-visualisering. Vec3 representerer en 3D-vektor og har overlastede operatorer som +, -, og * for enkel vektorregning. project() funksjonen konverterer et 3D-punkt til et 2D-punkt på skjermen med perspektivprojeksjon. draw_mesh_filled() tegner fylte trekantmesh med enkel lyssetting via dot-produkt mellom trekantens normal og en lyssretning.
+This file defines structures and functions for 3D visualization. Vec3 represents a 3D vector and includes overloaded operators such as +, -, and * to make vector math easier.
+
+The project() function is particularly interesting: it uses perspective projection to convert a 3D point into a 2D screen coordinate. The draw_mesh_filled() function utilizes standard computer graphics techniques to draw a shaded triangle mesh that visually approximates a sphere. Shading is calculated using the dot product between the surface normal and a light direction vector to simulate lighting.
+
+Another key function is generate_sphere_mesh(), which creates a sphere represented as a mesh of small triangles. It uses two nested loops to iterate over latitude (theta) and longitude (phi) angles and places points evenly on the surface of a 3D sphere. These points are then connected to form triangles that define the full surface of the mesh.
 
 ### celestial_body.h
 
-Dette er den objektorienterte ryggraden i prosjektet. CelestialBody er en abstrakt baseklasse som representerer himmellegemer. Den har virtuelle funksjoner som update_position(), apply_gravity_from(), og type(), slik at arvede klasser (Sun, Planet, Moon) kan implementere forskjellig oppførsel. F.eks. har Sun ingen bevegelse, Planet kan kaste unntak hvis den forlater systemet, og Moon beveger seg langsommere.
+This is the object-oriented foundation of the project. CelestialBody is an abstract base class representing astronomical bodies. It defines virtual functions such as update_position(), apply_gravity_from(), and type(), allowing derived classes (Sun, Planet, Moon) to override behavior. For example, the Sun does not move, the Planet can throw an exception if it escapes the system, and the Moon moves more slowly than other bodies.
 
-### 🌍 Case 8 – Final Demo
+⸻
 
-Hoveddemoen (case 8) viser en realistisk sol og planet i bane basert på fysikk, mens månen følger en hardkodet bane rundt planeten. Trajektorier vises ved hjelp av vektorer, og 3D-illusjon oppnås med shading. Farger og masser bestemmer visuell oppførsel.
+### Case 8 – Final Demo
 
-### 🎓 Oppsummering
+The main demonstration (case 8) shows a planet orbiting a sun based on physics. The moon follows a hardcoded orbit around the planet. Trajectories are visualized using vectors, and the 3D illusion is enhanced through lighting and shading. Object color and behavior are influenced by their mass and classification. The simulation also supports a “slingshot” scenario, where the Earth’s starting velocity is slightly decreased, allowing it to start orbit, and then when it comes closer to the sun it is thrown away fast, before it slowly returns to the new orbit. Try it yourself!
 
-Prosjektet viser:
-	•	Arv og polymorfi
-	•	Vektorregning og 3D-transformasjon
-	•	Bruk av Newtons gravitasjonslov
-	•	Bruk av grafisk brukergrensesnitt
-	•	Unntakshåndtering i gravitasjonsberegning
+⸻
 
-Simulasjonen er både visuell og fysisk informativ, og prosjektet er bygget opp modulært med tydelig klasseansvar.
+### Summary
+
+This project demonstrates:
+
+    Inheritance 
+	Vector math and 3D transformation
+	Application of Newton’s law of gravity
+    Use of a graphical user interface
+	Exception handling in physics simulation
+
+No code was fully AI-generated, but I used ChatGPT as a sparring partner while writing the draw_mesh_filled() function and exploring computer graphics concepts. I learned how perspective projection and vector-based shading work mathematically, and received some assistance when writing draw_mesh_filled() function.

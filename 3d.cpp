@@ -62,9 +62,9 @@ void draw_mesh_filled(const Mesh& mesh, TDT4102::AnimationWindow& win, TDT4102::
         int g = static_cast<int>((baseColor.greenChannel + 10) * brightness);
         int bCol = static_cast<int>((baseColor.blueChannel + 10) * brightness);
 
-        if (r > 255) r = 255;
-        if (g > 255) g = 255;
-        if (bCol > 255) bCol = 255;
+        if (r > 255) {r = 255;}
+        if (g > 255) {g = 255;}
+        if (bCol > 255) {bCol = 255;}
 
 
         // Construct shaded color
@@ -96,7 +96,7 @@ Mesh generate_sphere_mesh(int latitudeSteps, int longitudeSteps, float radius) {
             float y = radius * sin(theta) * sin(phi);
             float z = radius * cos(theta);
 
-            mesh.vertices.push_back({x, y, z+ 3.0f}); //move the sphere just in case it is on the projection and not divisible by zero
+            mesh.vertices.push_back({x, y, z+ 4.0f}); //move the sphere just in case it is on the projection and not divisible by zero
         }
     }
 
